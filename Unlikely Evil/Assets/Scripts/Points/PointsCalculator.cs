@@ -27,7 +27,7 @@ public class PointsCalculator : MonoBehaviour
 
     float CalculateDistanceTraveled()
     {
-        roadGenerator rg = player.GetComponent<roadGenerator>();
+        CorridorGenerator rg = player.GetComponent<CorridorGenerator>();
         int timesReseted = rg.TimesReseted;
         int resetPoint = rg.ResetPoint;
 

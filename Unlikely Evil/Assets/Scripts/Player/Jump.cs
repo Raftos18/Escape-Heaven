@@ -110,5 +110,4 @@ public class Jump : MonoBehaviour
             rb.AddForce(transform.up * (forceMultiplier / (hit.distance / 2)));
         }
     }
-
 }

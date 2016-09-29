@@ -1,5 +1,5 @@
 mno:5895
-OX:3061
-unknown:442
-Nikos:8493
-unknown:239
+Patatas:1893
+unknown:130
+Par:10738
+unknown:10

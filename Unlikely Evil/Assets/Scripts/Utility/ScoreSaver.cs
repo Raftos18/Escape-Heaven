@@ -49,13 +49,7 @@ public class ScoreSaver : MonoBehaviour
 
     void Update()
     {
-        //if (player.isDead)
-        //{
-        //    ToggleScoreSaver(true);
-        //    DisplayScores(ReadScores());
-        //}
-        //else
-        //    ToggleScoreSaver(false);
+
     }
 
     #region Could be moved to H.U.D
