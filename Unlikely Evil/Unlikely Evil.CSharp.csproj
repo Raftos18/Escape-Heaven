@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Enemy\Hunter.cs" />
+    <Compile Include="Assets\Scripts\Enemy\Void.cs" />
     <Compile Include="Assets\Scripts\Player\Death.cs" />
     <Compile Include="Assets\Scripts\Player\Jump.cs" />
     <Compile Include="Assets\Scripts\Player\Movement.cs" />
@@ -74,7 +75,6 @@
     <Compile Include="Assets\Scripts\UI\MainMenu.cs" />
     <Compile Include="Assets\Scripts\Utility\ScoreSaver.cs" />
     <Compile Include="Assets\Scripts\Utility\Utility.cs" />
-    <Compile Include="Assets\Scripts\Void.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>

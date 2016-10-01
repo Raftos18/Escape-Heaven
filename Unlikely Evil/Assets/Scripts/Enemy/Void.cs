@@ -16,6 +16,9 @@ public class Void : MonoBehaviour
         {
             Death dth = player.GetComponent<Death>();
             dth.StartCoroutine(dth.Kill());
+
+            //Pull the player down when he steps into the void...
+            player.GetComponent<Rigidbody>().AddForce(Vector3.down * 50, ForceMode.Impulse);
         }
     }
 

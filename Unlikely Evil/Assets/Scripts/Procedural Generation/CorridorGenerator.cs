@@ -9,23 +9,28 @@ using System;
 /// (Currently only one). 
 /// </summary>
 
+
+
 public class CorridorGenerator : MonoBehaviour
 {
     public int ResetPoint = 5000;
-    public int numberOfPrefabs = 4;
-    public int roadLength = 7;
+    public int CorridorLength = 20;
     public int TimesReseted = 0;
 
+    private Difficulty difficulty = Difficulty.Default;
     private GameObject player;
     private List<GameObject> corridor;
-    private byte[] corridorJar;                     
+    private List<byte> corridorJar;
 
     private System.Random rand;
 
-
     void Awake()
     {
-        FillJar();
+        rand = new System.Random();
+        player = GameObject.FindWithTag("Player");
+        corridorJar = new List<byte>();
+
+        FillJar((int)difficulty);
     }
 
     void Start()
@@ -35,9 +40,19 @@ public class CorridorGenerator : MonoBehaviour
 
     void Update()
     {
+       
+        if (Input.GetButtonUp("Fire3"))
+        {
+            Debug.Log("Difficulty Raised");
+            difficulty++;
+            Debug.Log(difficulty);
+            FillJar((int)difficulty);
+        }
+
         player = GameObject.FindWithTag("Player");
         for (int i = 0; i < corridor.Count; i++)
         {
+
             if (corridor[i].transform.position.z + 10 < player.transform.position.z)
             {
                 GameObject.Destroy(corridor[i]);
@@ -52,19 +67,12 @@ public class CorridorGenerator : MonoBehaviour
     /// </summary>
     private void InitCorridor()
     {
-        rand = new System.Random();
         corridor = new List<GameObject>();
-        player = GameObject.FindWithTag("Player");
-
+       
         GameObject a = Instantiate(Resources.Load("Corridor/Corridor1", typeof(GameObject)), new Vector3(-5, 0, -10), Quaternion.identity) as GameObject;
-        GameObject b = Instantiate(Resources.Load("Corridor/Corridor1", typeof(GameObject)), new Vector3(-5, 0, Maxz()), Quaternion.identity) as GameObject;
-        GameObject c = Instantiate(Resources.Load("Corridor/Corridor1", typeof(GameObject)), new Vector3(-5, 0, Maxz()), Quaternion.identity) as GameObject;
-
         corridor.Add(a);
-        corridor.Add(b);
-        corridor.Add(c);
 
-        for (int i = 0; i < roadLength; i++)
+        for (int i = 0; i < CorridorLength; i++)
             AppendToRoad();
     }
 
@@ -86,17 +94,32 @@ public class CorridorGenerator : MonoBehaviour
 
     /// <summary>
     /// Resets the corridor according to the players position.
+    /// Should only be called on Reset in the player class. 
+    /// Else the difficulty mechanic will break.
     /// </summary>
     public void ResetAccordingToPlayer()
     {
         if (gameObject.GetComponent<Movement>().StartGame)
+        {
             TimesReseted++;
+
+            difficulty++;
+            FillJar((int)difficulty);
+        }
 
         for (int i = 0; i < corridor.Count; i++)
         {
-            corridor[i].transform.position = new Vector3(corridor[i].transform.position.x, corridor[i].transform.position.y, corridor[i].transform.position.z - 5000);
+            corridor[i].transform.position = new Vector3(corridor[i].transform.position.x, corridor[i].transform.position.y, corridor[i].transform.position.z - ResetPoint);
         }
 
+    }
+    
+    /// <summary>
+    /// Sets the difficulty to the base level.
+    /// </summary>
+    public void ResetDifficulty()
+    {
+        difficulty = Difficulty.Default;
     }
 
     /// <summary>
@@ -106,7 +129,7 @@ public class CorridorGenerator : MonoBehaviour
     {
         var corridorIndex = corridorJar[SelectRandomCorridor()];
 
-        GameObject r = Instantiate(Resources.Load("Corridor/Corridor" + corridorIndex, typeof(GameObject)),new Vector3(-5, 0, Maxz() + 10), Quaternion.identity) as GameObject;
+        GameObject r = Instantiate(Resources.Load("Corridor/Corridor" + corridorIndex, typeof(GameObject)), new Vector3(-5, 0, Maxz() + 10), Quaternion.identity) as GameObject;
 
         corridor.Add(r);
     }
@@ -119,31 +142,39 @@ public class CorridorGenerator : MonoBehaviour
     /// <returns>An integer index</returns>
     private int SelectRandomCorridor()
     {
-        const int highCorChance = 10;
-
-        if(TimesReseted < 1)
-            return rand.Next(1, corridorJar.Length - highCorChance);
-        else
-            return rand.Next(1, corridorJar.Length);
+        return rand.Next(1, corridorJar.Count);
     }
 
     /// <summary>
     /// Imagine that we have an empty jar (toy box)
-    /// and we fill it with different corridor prefabs (toys).
+    /// and we fill it with different corridor prefabs(toys).
     /// </summary>
-    private void FillJar()
+    private void FillJar(int availableCorridors)
     {
-        corridorJar = new byte[100];
-        for (int i = 0; i < 100; i++)
-            if (i < 50)
-                corridorJar[i] = 1;
-            else if (i < 80)
-                corridorJar[i] = 2;
-            else if (i < 90)
-                corridorJar[i] = 3;
-            else
-                corridorJar[i] = 4;
+        corridorJar.Clear();
 
+        byte corridor = 1;
+        int divisor = availableCorridors - 1;
+
+        while (divisor > 0)
+        {
+            int availableSpots = divisor * 10;
+
+            for (int i = 0; i < availableSpots; i++)
+            {
+                if (divisor == availableCorridors - 2)
+                    corridorJar.Add((byte)rand.Next(2, 4));
+
+                corridorJar.Add(corridor);
+            }
+
+            if (divisor == availableCorridors - 2)
+                corridor += 2;
+            else
+                corridor++;
+
+            divisor--;
+        }
     }
 
     /// <summary>
@@ -156,7 +187,20 @@ public class CorridorGenerator : MonoBehaviour
         foreach (GameObject g in corridor)
             if (g.transform.position.z > max)
                 max = g.transform.position.z;
-        
+
         return max;
     }
+}
+
+
+/// <summary>
+/// Controls the difficulty of the game
+/// </summary>
+public enum Difficulty
+{
+    Default = 2,
+    Priest = 3,
+    Angel = 4,
+    //Jesus = 5,
+    //God = 6,
 }

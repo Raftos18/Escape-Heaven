@@ -38,7 +38,6 @@ public class ScoreSaver : MonoBehaviour
         int score = int.Parse(hud.Score.text.Split(SEPERATOR)[1]);
         if (SaveScore(name, score))
         {
-            Debug.Log("Saved successfully");
             return;
         }
         else
@@ -47,14 +46,9 @@ public class ScoreSaver : MonoBehaviour
         }
     }
 
-    void Update()
-    {
-
-    }
-
     #region Could be moved to H.U.D
     /// <summary>
-    /// Needs fixing in the inspector
+    /// Opens and closes the Score Saver in the HUD
     /// </summary>
     /// <param name="activate"></param>
     public void ToggleScoreSaver(bool activate)
@@ -63,7 +57,7 @@ public class ScoreSaver : MonoBehaviour
     }
 
     /// <summary>
-    /// Ready
+    /// Display the scores in descending order
     /// </summary>
     /// <param name="scores"></param>
     public void DisplayScores(Dictionary<string, int> scores)

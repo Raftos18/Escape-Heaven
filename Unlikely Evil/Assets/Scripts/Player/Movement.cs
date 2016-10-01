@@ -73,15 +73,22 @@ public class Movement : MonoBehaviour
 
     private float nextExec = 0.0f;
     private void MoveInput()
-    {
-        if (Input.GetButtonUp("Fire1"))
+    {  
+        if (Input.GetButton("Fire1"))
         {
             Accelerate(ref Speed, Acceleration);
             rb.AddForce(Vector3.forward * Speed, ForceMode.Impulse);
         }
+        else if(Input.GetButton("Fire2"))
+        {
+            rb.AddForce(Vector3.back * Speed, ForceMode.Impulse);
+            Deccelerate(ref Speed, Acceleration);
+        }
         else
         {
-             Utility.ExecuteAfter(WrapperDec, ref nextExec, DecelerationCooldown);
+            //Utility.ExecuteAfter(WrapperDec, ref nextExec, DecelerationCooldown);
+
+            Deccelerate(ref Speed, Acceleration);
         }
 
         if (Input.GetAxis("Horizontal") != 0)
@@ -285,7 +292,8 @@ public class Movement : MonoBehaviour
     }
 
     /// <summary>
-    /// Resets player in original state
+    /// Resets player in original state.
+    /// The order call matters be careful.
     /// </summary>
     public void Reset()
     {
@@ -295,9 +303,10 @@ public class Movement : MonoBehaviour
             Speed = 0;
             gameObject.GetComponent<Collider>().enabled = true;
             gameObject.GetComponent<Renderer>().material.SetColor("_Color", Color.black);
-            transform.position = new Vector3(0, 1, 5);
+            transform.position = new Vector3(0, 3.5f, 0);
+            gameObject.GetComponent<CorridorGenerator>().ResetDifficulty();
             GetComponent<CorridorGenerator>().ResetAccordingToPlayer();
-            gameObject.GetComponent<CorridorGenerator>().TimesReseted = 0;
+            gameObject.GetComponent<CorridorGenerator>().TimesReseted = 0;   
         }
     }
 }
