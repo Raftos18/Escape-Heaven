@@ -3,18 +3,17 @@ using System.Collections;
 
 public class Death : MonoBehaviour
 {
+    public bool IsDead;
     public float ChangeColorRate = 1.0f;
     public float ChangeColorDelay = 0.2f;
     public bool CanRestart;
 
-    private Movement player;
     Renderer renderer;
     private Color becomeWhite = new Color();
     private float[] color = new float[3] { 0, 0, 0 };
 
     void Start()
     {
-        player = gameObject.GetComponent<Movement>();
         renderer = gameObject.GetComponent<Renderer>();
         CanRestart = false;
     }
@@ -26,7 +25,7 @@ public class Death : MonoBehaviour
     /// <returns></returns>
     public IEnumerator Kill()
     {
-        player.isDead = true;
+        IsDead = true;
         MainMenu.ShowScore = true;
         while (color[0] < 3)
         {
@@ -45,7 +44,7 @@ public class Death : MonoBehaviour
     /// <param name="material">The renderer's material</param>
     private void ChangeColor(Material material)
     {
-        if (player.isDead)
+        if (IsDead)
         {
             for (int i = 0; i < color.Length; i++)
                 color[i] += (ChangeColorRate) * Time.deltaTime;

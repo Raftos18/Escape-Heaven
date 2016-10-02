@@ -36,7 +36,15 @@ public class Jump : MonoBehaviour
     {
         ApplyGravity(rb);
         BalancePlayer();
+    }
 
+    /// <summary>
+    /// Handles the jumping mechanic.
+    /// Call from Player script.
+    /// </summary>
+    /// <param name="player"></param>
+    public void JumpHandler(Player player)
+    {
         if (Input.GetButtonDown("Jump"))
         {
             TimeHeld = 0f;
@@ -47,7 +55,7 @@ public class Jump : MonoBehaviour
         }
         if (Input.GetButtonUp("Jump"))
         {
-            Jumping();
+            Jumping(player);
         }
     }
 
@@ -80,9 +88,9 @@ public class Jump : MonoBehaviour
     /// Calculates the power of the jump depending on
     /// how long the jump button is pressed
     /// </summary>
-    public void Jumping()
+    public void Jumping(Player player)
     {
-        if (!player.isDead && CanJump(JumpingPoint))
+        if (!player.IsDead() && CanJump(JumpingPoint))
         {
             float verticalJumpForce = ((MaxJumpForce - MinJumpForce) * (TimeHeld / TimeForFullJump)) + MinJumpForce;
 

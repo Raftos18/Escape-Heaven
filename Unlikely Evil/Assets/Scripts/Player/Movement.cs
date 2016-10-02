@@ -14,45 +14,28 @@ public class Movement : MonoBehaviour
     public int MaxSpeed;
     public float MinSpeed = 0;
     public float Acceleration;
-    
     public float DecelerationCooldown;
 
-    [Header("Floating")]
-    public float Amplitude = 0.5f;
-    public float FloatSpeed = 0.5f;
-    public float floatOffset = 1.5f;
-
-    // These have no place here
-    [Space]
-    public bool StartGame;
-    public AudioClip[] Sounds;
-    public bool isDead;
-
-    private Rigidbody rb;
-    private AudioSource ad;
-   
+    
 	// Use this for initialization
 	void Start ()
     {
-        rb = gameObject.GetComponent<Rigidbody>();
-        ad = gameObject.GetComponent<AudioSource>();
-        StartGame = false;
-        isDead = false;
+        
     }
 
     void FixedUpdate()
     {
-        if (StartGame)
-            Move();
-        else
-            OpeningMove();
+        //if (StartGame)
+        //    Move();
+        //else
+        //    OpeningMove();
     }
 
     // Update is called once per frame
     void Update()
     {
         //PlayDeathSound(Sounds[(int)SoundsEnum.Death]);
-        GetComponent<CorridorGenerator>().ResetCorridorOnPoint(this);
+        //GetComponent<CorridorGenerator>().ResetCorridorOnPoint(this);
     }
 
     /// <summary>
@@ -65,29 +48,34 @@ public class Movement : MonoBehaviour
 
     #region Move Code
 
-    public void Move()
+    /// <summary>
+    /// Handles the player movement
+    /// </summary>
+    /// <param name="player"></param>
+    public void MoveHandler(Player player)
     {
-        if(!isDead)
-            MoveInput();
+        if(!player.IsDead())
+            MoveInput(player);
     }
 
-    private float nextExec = 0.0f;
-    private void MoveInput()
+    /// <summary>
+    /// Takes the input for moving the player
+    /// </summary>
+    /// <param name="player"></param>
+    private void MoveInput(Player player)
     {  
         if (Input.GetButton("Fire1"))
         {
             Accelerate(ref Speed, Acceleration);
-            rb.AddForce(Vector3.forward * Speed, ForceMode.Impulse);
+            player.rigbody.AddForce(Vector3.forward * Speed, ForceMode.Impulse);
         }
         else if(Input.GetButton("Fire2"))
         {
-            rb.AddForce(Vector3.back * Speed, ForceMode.Impulse);
+            player.rigbody.AddForce(Vector3.back * Speed, ForceMode.Impulse);
             Deccelerate(ref Speed, Acceleration);
         }
         else
         {
-            //Utility.ExecuteAfter(WrapperDec, ref nextExec, DecelerationCooldown);
-
             Deccelerate(ref Speed, Acceleration);
         }
 
@@ -268,13 +256,13 @@ public class Movement : MonoBehaviour
     /// Plays sound during the movement of the player if he is not dead. 
     /// </summary>
     /// <param name="sound"></param>
-    public void PlayMovingSound(AudioClip sound)
+    public void PlayMovingSound(AudioClip sound, Player player)
     {
-        if (!isDead && !playing)
+        if (!player.IsDead() && !playing)
         {
             playing = true;
-            ad.clip = sound;
-            ad.Play();
+            player.audioSource.clip = sound;
+            player.audioSource.Play();
         }
     }
 
@@ -282,31 +270,33 @@ public class Movement : MonoBehaviour
     /// Plays sound when the player dies.
     /// </summary>
     /// <param name="sound"></param>
-    public void PlayDeathSound(AudioClip sound)
+    public void PlayDeathSound(AudioClip sound, Player player)
     {
-        if (isDead)
+        if (player.IsDead())
         {
-            ad.clip = sound;
-            ad.Play();
+            player.audioSource.clip = sound;
+            player.audioSource.Play();
         }
     }
 
-    /// <summary>
-    /// Resets player in original state.
-    /// The order call matters be careful.
-    /// </summary>
-    public void Reset()
-    {
-        if (StartGame)
-        {
-            isDead = false;
-            Speed = 0;
-            gameObject.GetComponent<Collider>().enabled = true;
-            gameObject.GetComponent<Renderer>().material.SetColor("_Color", Color.black);
-            transform.position = new Vector3(0, 3.5f, 0);
-            gameObject.GetComponent<CorridorGenerator>().ResetDifficulty();
-            GetComponent<CorridorGenerator>().ResetAccordingToPlayer();
-            gameObject.GetComponent<CorridorGenerator>().TimesReseted = 0;   
-        }
-    }
+    ///// <summary>
+    ///// Resets player in original state.
+    ///// The order call matters be careful.
+    ///// It should be a lot simpler with calls to 
+    ///// different components
+    ///// </summary>
+    //public void Reset()
+    //{
+    //    if (StartGame)
+    //    {
+    //        isDead = false;
+    //        Speed = 0;
+    //        gameObject.GetComponent<Collider>().enabled = true;
+    //        gameObject.GetComponent<Renderer>().material.SetColor("_Color", Color.black);
+    //        transform.position = new Vector3(0, 3.5f, 0);
+    //        gameObject.GetComponent<CorridorGenerator>().ResetDifficulty();
+    //        GetComponent<CorridorGenerator>().ResetAccordingToPlayer();
+    //        gameObject.GetComponent<CorridorGenerator>().TimesReseted = 0;   
+    //    }
+    //}
 }

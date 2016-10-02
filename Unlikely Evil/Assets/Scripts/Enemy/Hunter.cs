@@ -6,16 +6,14 @@ public class Hunter : MonoBehaviour
     public float Speed;
     public int BeginHuntDelay = 1;
 
-    private Movement player;
+    private Player player;
     private bool beginHunt;
-    private Death death;
     private int startIndex = 0;       // if the start index goes to 2 start the hunt
 
     void Start ()
     {
         beginHunt = false;
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Movement>();
-        death = player.GetComponent<Death>();
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
     }
 
     /// <summary>
@@ -30,15 +28,18 @@ public class Hunter : MonoBehaviour
 
     void Update()
     {
-        StartAfterInput(player.StartGame);
-        HuntPlayer(Speed, beginHunt);
+        if (player != null)
+        {
+            StartAfterInput(player.StartGame);
+            HuntPlayer(Speed, beginHunt);
+        }
     }
 
     void OnTriggerEnter(Collider col)
     {
-        if (col.tag == "Player" && !player.isDead)
+        if (col.tag == "Player" && !player.IsDead())
         {
-            StartCoroutine(death.Kill());
+            StartCoroutine(player.death.Kill());
         }
     }
 
@@ -53,10 +54,10 @@ public class Hunter : MonoBehaviour
         {
             float huntSpeed = speed;
 
-            if (huntSpeed >= player.Speed)
+            if (huntSpeed >= player.movement.Speed)
                 huntSpeed = speed;
             else
-                huntSpeed = (player.Speed - speed);
+                huntSpeed = (player.movement.Speed - speed);
 
 
             Vector3 hunt = new Vector3(0, 0, huntSpeed * Time.deltaTime);

@@ -63,7 +63,7 @@ public class CorridorGenerator : MonoBehaviour
     }
 
     /// <summary>
-    /// Initialize the corridor by adding the basic corridor prefab 4 times
+    /// Initialize the corridor
     /// </summary>
     private void InitCorridor()
     {
@@ -99,7 +99,7 @@ public class CorridorGenerator : MonoBehaviour
     /// </summary>
     public void ResetAccordingToPlayer()
     {
-        if (gameObject.GetComponent<Movement>().StartGame)
+        if (gameObject.GetComponent<Player>().StartGame)
         {
             TimesReseted++;
 
@@ -151,6 +151,10 @@ public class CorridorGenerator : MonoBehaviour
     /// </summary>
     private void FillJar(int availableCorridors)
     {
+
+        // Don't try to thing it too much (High complexity)
+        // It works and it is quite flexible
+        // even if new corridors are added to the game
         corridorJar.Clear();
 
         byte corridor = 1;
@@ -195,6 +199,9 @@ public class CorridorGenerator : MonoBehaviour
 
 /// <summary>
 /// Controls the difficulty of the game
+/// If new corridors are added then uncomment
+/// a difficulty for each new corridor or 
+/// add a new one.
 /// </summary>
 public enum Difficulty
 {

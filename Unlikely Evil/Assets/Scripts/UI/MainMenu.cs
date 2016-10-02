@@ -11,30 +11,28 @@ public class MainMenu : MonoBehaviour
     public GameObject[] MainMenuElements;
     public event EventHandler Restarted;                // Event called when game is restarted
 
-    private Movement player;
-    private Death death;
+    private Player player;
     private Hunter hunter;
     private ScoreSaver scoreSaver;
 
     // Use this for initialization
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Movement>();
-        death = player.GetComponent<Death>();
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         hunter = GameObject.FindGameObjectWithTag("Hunter").GetComponent<Hunter>();
         scoreSaver = gameObject.GetComponent<ScoreSaver>();
     }
 
     void Update()
     {
-        if (player.isDead)
+        if (player.IsDead())
         {
             ToogleMainMenuElements(false);
             ShowFinalScore();
 
         }
 
-        if(death.CanRestart)
+        if (player.death.CanRestart)
             ToogleRestart(true);
         else
             ToogleRestart(false);
@@ -67,8 +65,6 @@ public class MainMenu : MonoBehaviour
             Audio.enabled = true;
         }
     }
-
-    
 
     protected virtual void OnRestarted(EventArgs e)
     {

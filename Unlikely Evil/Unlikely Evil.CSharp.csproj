@@ -68,6 +68,7 @@
     <Compile Include="Assets\Scripts\Player\Death.cs" />
     <Compile Include="Assets\Scripts\Player\Jump.cs" />
     <Compile Include="Assets\Scripts\Player\Movement.cs" />
+    <Compile Include="Assets\Scripts\Player\Player.cs" />
     <Compile Include="Assets\Scripts\Player\SoundsEnum.cs" />
     <Compile Include="Assets\Scripts\Points\PointsCalculator.cs" />
     <Compile Include="Assets\Scripts\Procedural Generation\CorridorGenerator.cs" />
